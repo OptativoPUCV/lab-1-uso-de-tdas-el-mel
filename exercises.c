@@ -41,9 +41,17 @@ debes reservar memoria para cada elemento que agregues.
 Al finalizar retorna la lista creada.
 */
 
-List* crea_lista() {
+List* crea_lista() 
+{
    List* L = create_list();
-   return L;
+    int* numero;
+    for(int i = 1; i <= 10; i++)
+    {
+         numero = (int*)malloc(sizeof(int));
+         *numero = i;
+         pushBack(L, numero);
+    }
+    return L;
 }
 
 /*
@@ -51,8 +59,17 @@ Ejercicio 2.
 Crea una función que reciba una lista de enteros (int*) y 
 retorne la suma de sus elementos.
 */
-int sumaLista(List *L) {
-   return 0;
+int sumaLista(List *L) 
+{
+   int suma = 0;
+   int* numero;
+   numero = first(L);
+   while(numero != NULL)
+   {
+      suma += *numero;
+      numero = next(L);
+   }
+   return suma;
 }
 
 /*
@@ -64,8 +81,17 @@ Asume que popCurrent luego de eliminar un elemento se
 posiciona en el elemento anterior.
 */
 
-void eliminaElementos(List*L, int elem){
-
+void eliminaElementos(List*L, int elem)
+{
+   int* elemento = first(L);
+   while(elemento != NULL)
+   {
+      if(*elemento == elem)
+      {
+         popCurrent(L);
+      }
+      elemento = next(L);
+   }
 }
 
 /*
@@ -75,7 +101,24 @@ El orden de ambas pilas se debe mantener.
 Puedes usar una pila auxiliar.
 */
 
-void copia_pila(Stack* P1, Stack* P2) {
+void copia_pila(Stack* P1, Stack* P2) 
+{
+   Stack* P_aux = create_stack();
+
+   while(top(P1))
+   {
+      void *dato = top(P1);
+      push(P_aux, dato);   
+      pop(P1);
+   }
+
+   while(top(P_aux))
+   {
+      void *dato = top(P_aux);
+      push(P1, dato);
+      push(P2, dato);   
+      pop(P_aux);
+   }
 }
 
 /*
@@ -85,7 +128,32 @@ paraéntesis balanceados. Retorna 1 si están balanceados,
 0 en caso contrario.
 */
 
-int parentesisBalanceados(char *cadena) {
-   return 0;
+int parentesisBalanceados(char *cadena) 
+{
+   Stack* pila=create_stack();
+
+   for (int i=0; cadena[i]!='\0'; i++) 
+   {
+      if(cadena[i] == '(' || cadena[i] == '[' || cadena[i] == '{')
+      {
+         push(pila, &cadena[i]);
+      }
+
+      else if (cadena[i] == ')' || cadena[i] == ']' || cadena[i] == '}') 
+      {
+         if (top(pila) == NULL) return 0;
+
+         char* c=top(pila);
+         if ((cadena[i] == ')' && *c == '(') ||
+         (cadena[i] == ']' && *c == '[') ||
+         (cadena[i] == '}' && *c == '{'))
+         {
+            pop(pila);
+         }
+         else return 0;
+      }
+   }
+   if (top(pila) != NULL) return 0;
+   return 1;
 }
 
